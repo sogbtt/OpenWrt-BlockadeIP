@@ -34,5 +34,33 @@ BanIP 是一个运行在 **OpenWrt 路由器**上的轻量化防火墙工具，�
   ```sh
   opkg update
   opkg install iptables-mod-raw
+  
+🚀 部署流程【手动封禁管理脚本】
+1.部署终端手动封禁脚本
+将banip.sh  拷贝至 /usr/bin/下  并取消.sh尾缀
+赋予脚本权限
+chmod +x /usr/bin/banip
+2.在终端输入 banip 即可弹出手动封禁脚本，用于临时封禁测试和手动指定IP封禁
+<img width="702" height="248" alt="image" src="https://github.com/user-attachments/assets/37e90e3f-1947-4c88-90e1-3673968ff864" />
+BANIP_LIST="/etc/banip.list"   #黑名单存放路径
+
+3.配置ini.d启动项
+将 banip-persist.sh脚本内容
+● 将以上内容粘贴进：nano /etc/init.d/banip-persist
+● 保存并退出后，赋予执行权限：chmod +x /etc/init.d/banip-persist
+● 设置开机自动启动（只需执行一次）：/etc/init.d/banip-persist enable
+● （可选）立即手动执行一次测试：/etc/init.d/banip-persist start
+💡 启动时你也可以通过查看日志验证：  logread | grep banip    出现 正在恢复封禁列表... 就代表执行成功了
+
+4.在Luci面板，
+ exit 0 前加入启动脚本：  
+ /etc/init.d/banip-persist start
+ <img width="1504" height="680" alt="image" src="https://github.com/user-attachments/assets/e6450249-9256-476d-9577-212ccfddc6ff" />
+● 本脚本用于启动时恢复曾经已经封禁的黑名单IP列表
+
+5.使用如下命令查看当前生效封禁IP列表
+查看封禁列表是否存在 iptables -t raw -L PREROUTING -n --line-numbers
+
+🚀 部署流程【手动封禁脚本部署】
 
 
