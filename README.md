@@ -102,6 +102,7 @@ BANIP_LIST="/etc/banip.list"   # 黑名单存放路径
 ```sh
 iptables -t raw -L PREROUTING -n --line-numbers
 ```
+<img width="716" height="467" alt="image" src="https://github.com/user-attachments/assets/5b61095c-d75c-4547-bbdb-5a3227aee26d" />
 
 ---
 
