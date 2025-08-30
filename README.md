@@ -233,4 +233,9 @@ iptables -t raw -L PREROUTING -n --line-numbers
 
 <img width="2231" height="398" alt="image" src="https://github.com/user-attachments/assets/04e0b37b-2a7f-4f68-a6b8-88d69a555533" />
 
+# 📌 写在最后
+
+有能力的大咖可以尝试将本项目 **编译为 ipk 插件**。毕竟隔三差五就会遇到 SSH 爆破和 WEB 异常爆破，虽然系统自带了一些防护手段，但效果始终不尽人意，只能做到拦截，而缺乏真正的防治能力。
+
+更神奇的是，自从这个面板上线后，我已经很久没有看到有人再次攻击我的 OpenWrt —— 这或许就是 **「望而生畏计划」** 的魅力。
 
