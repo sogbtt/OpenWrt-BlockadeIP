@@ -35,75 +35,175 @@ BanIP 是一个运行在 **OpenWrt 路由器**上的轻量化防火墙工具，�
   opkg update
   opkg install iptables-mod-raw
   
-🚀 部署流程【手动封禁管理脚本】
-1.部署终端手动封禁脚本
-将banip.sh  拷贝至 /usr/bin/下  并取消.sh尾缀
-赋予脚本权限
+# 🚀 部署流程【手动封禁管理脚本】
+
+## 1. 部署终端手动封禁脚本
+
+* 将 `banip.sh` 拷贝至 `/usr/bin/` 下，并取消 `.sh` 尾缀
+* 赋予脚本权限：
+
+```sh
 chmod +x /usr/bin/banip
-2.在终端输入 banip 即可弹出手动封禁脚本，用于临时封禁测试和手动指定IP封禁
+```
+
+## 2. 使用方式
+
+在终端输入：
+
+```sh
+banip
+```
+
+即可弹出手动封禁脚本，用于临时封禁测试和手动指定 IP 封禁。
+
 <img width="702" height="248" alt="image" src="https://github.com/user-attachments/assets/37e90e3f-1947-4c88-90e1-3673968ff864" />
-BANIP_LIST="/etc/banip.list"   #黑名单存放路径
 
-3.配置ini.d启动项
-将 banip-persist.sh脚本内容
-● 将以上内容粘贴进：nano /etc/init.d/banip-persist
-● 保存并退出后，赋予执行权限：chmod +x /etc/init.d/banip-persist
-● 设置开机自动启动（只需执行一次）：/etc/init.d/banip-persist enable
-● （可选）立即手动执行一次测试：/etc/init.d/banip-persist start
-💡 启动时你也可以通过查看日志验证：  logread | grep banip    出现 正在恢复封禁列表... 就代表执行成功了
+```sh
+BANIP_LIST="/etc/banip.list"   # 黑名单存放路径
+```
 
-4.在Luci面板，
- exit 0 前加入启动脚本：  
- /etc/init.d/banip-persist start
- <img width="1504" height="680" alt="image" src="https://github.com/user-attachments/assets/e6450249-9256-476d-9577-212ccfddc6ff" />
-● 本脚本用于启动时恢复曾经已经封禁的黑名单IP列表
+## 3. 配置 init.d 启动项
 
-5.使用如下命令查看当前生效封禁IP列表
-查看封禁列表是否存在 iptables -t raw -L PREROUTING -n --line-numbers
+* 将 `banip-persist.sh` 脚本内容粘贴进：
 
-🔒 高级功能：【SSH 安全卫士】
-●自动分析 logread 或 LuCI 系统日志
-●识别同一 IP 短时间内多次 SSH 爆破行为（默认阈值：20 次）
-●自动调用 banip.sh 封禁该 IP
-●在 /mnt/sda1/Caches/ 下生成日志文件，仅记录成功封禁的 IP
+  ```sh
+  nano /etc/init.d/banip-persist
+  ```
+* 保存并退出后，赋予执行权限：
 
-1、部署防护脚本 将ssh_guard.sh  拷贝至/usr/bin/ssh_guard.sh  
-2、chmod +x /usr/bin/ssh_guard.sh
-3、守护日志路径：/mnt/sda1/Caches/ssh_guard.log
-如需修改日志储存路径，请修改脚本中，其余路径请不要做改动
-LOG_FILE="/mnt/sda1/Caches/ssh_guard.log"
-4、设置计划任务周期性运行IP封禁卫士脚本
-计划任务每分钟执行一次脚本：
-* * * * * /usr/bin/ssh_guard.sh
+  ```sh
+  chmod +x /etc/init.d/banip-persist
+  ```
+* 设置开机自动启动（只需执行一次）：
+
+  ```sh
+  /etc/init.d/banip-persist enable
+  ```
+* （可选）立即手动执行一次测试：
+
+  ```sh
+  /etc/init.d/banip-persist start
+  ```
+
+💡 开机启动时你也可以通过查看日志验证：
+
+```sh
+logread | grep banip
+```
+
+出现 `正在恢复封禁列表...` 就代表执行成功了。
+
+## 4. 在 Luci 面板配置
+
+在 `exit 0` 前加入启动脚本：
+
+```sh
+/etc/init.d/banip-persist start
+```
+
+<img width="1504" height="680" alt="image" src="https://github.com/user-attachments/assets/e6450249-9256-476d-9577-212ccfddc6ff" />
+
+* 本脚本用于启动时恢复曾经已经封禁的黑名单 IP 列表。
+
+## 5. 查看当前生效封禁 IP 列表
+
+```sh
+iptables -t raw -L PREROUTING -n --line-numbers
+```
+
+---
+
+# 🔒 高级功能：【SSH 安全卫士】
+
+* 自动分析 `logread` 或 LuCI 系统日志
+* 识别同一 IP 短时间内多次 SSH 爆破行为（默认阈值：20 次）
+* 自动调用 `banip.sh` 封禁该 IP
+* 在 `/mnt/sda1/Caches/` 下生成日志文件，仅记录成功封禁的 IP
+
+## 部署步骤
+
+1. 部署防护脚本：
+
+   ```sh
+   cp ssh_guard.sh /usr/bin/ssh_guard.sh
+   chmod +x /usr/bin/ssh_guard.sh
+   ```
+
+2. 守护日志路径：
+
+   ```sh
+   /mnt/sda1/Caches/ssh_guard.log
+   ```
+
+   如需修改日志储存路径，请修改脚本中，其余路径请不要做改动：
+
+   ```sh
+   LOG_FILE="/mnt/sda1/Caches/ssh_guard.log"
+   ```
+
+3. 设置计划任务周期性运行 IP 封禁卫士脚本：
+
+   ```sh
+   * * * * * /usr/bin/ssh_guard.sh
+   ```
+
 <img width="1168" height="578" alt="image" src="https://github.com/user-attachments/assets/396c9a25-b1b1-4c0d-a081-eea0452fa061" />
 
-🔒 高级功能：【SSH 安全卫士-WEB前端部分】
-请将index.html文件放在同上 LOG_FILE="/mnt/sda1/Caches/ssh_guard.log" 目录下
-前端文件将自动读取log内容并在前端呈现，下面将引导使用docker部署nginx简易前端服务器
+---
+
+# 🔒 高级功能：【SSH 安全卫士 - WEB 前端部分】
+
+* 请将 `index.html` 文件放在同上：
+
+  ```sh
+  LOG_FILE="/mnt/sda1/Caches/ssh_guard.log"
+  ```
+
+* 前端文件将自动读取 log 内容并在前端呈现。
+
+## 使用 Docker 部署 Nginx 简易前端服务器
 
 <img width="440" height="76" alt="image" src="https://github.com/user-attachments/assets/61d27d4d-f0da-449f-bc08-53b98a9e3c13" />
-1、拉取并运行 Nginx 容器
-将 /mnt/sda1/Caches 挂载到容器内的 /usr/share/nginx/html，
-并将宿主机 17480 端口映射到容器的 80 端口：
+
+### 1. 拉取并运行 Nginx 容器
+
+```sh
 docker run -d \
   --name banip-web \
   -p 17480:80 \
   -v /mnt/sda1/Caches:/usr/share/nginx/html:rw \
   nginx:latest
+```
 
-2. 访问日志面板
-(http://<你的路由器IP>:17480/)
+### 2. 访问日志面板
 
-3、即可查看 /mnt/sda1/Caches 下的封禁日志文件，前端 Web 页面会实时展示最新结果。
+```
+http://<你的路由器IP>:17480/
+```
 
-🔒 高级功能：【SSH 安全卫士-Luci登录页样式修改】
-Openwrt默认登录界面并没有额外的按钮扩展，可通过修改模板样式文件来实现新增防护按钮，
-Luci登录界面：/usr/lib/lua/luci/view/themes/argon/sysauth.htm
-大概在第154行左右找到submit登录按钮位置，在下方新增代码
+### 3. 查看结果
+
+* `/mnt/sda1/Caches` 下的封禁日志文件将实时展示在前端 Web 页面中。
+
+
+
+# 🔒 高级功能：【SSH 安全卫士 - Luci 登录页样式修改】
+
+OpenWrt 默认登录界面并没有额外的按钮扩展，可通过修改模板样式文件来实现新增防护按钮。
+
+* LuCI 登录界面文件路径：
+
+  ```
+  /usr/lib/lua/luci/view/themes/argon/sysauth.htm
+  ```
+* 大概在第 154 行左右找到 submit 登录按钮位置，在下方新增代码：
+
 <img width="868" height="281" alt="image" src="https://github.com/user-attachments/assets/84b54560-b8e8-40cd-b218-f2b21514c998" />
 
- <a href="http://www.orzjuice.top:17480/" target="_blank"
-style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-color:#ff7e00; color:#fff; font-size:16px; text-align:center;         border-radius:8px; text-decoration:none; font-weight:bold;">
+```html
+<a href="http://www.orzjuice.top:17480/" target="_blank"
+style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-color:#ff7e00; color:#fff; font-size:16px; text-align:center; border-radius:8px; text-decoration:none; font-weight:bold;">
  🛡️ 爆 破 攻 击 拦 截 L o g s </a>
+```
 
 
