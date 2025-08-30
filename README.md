@@ -200,26 +200,37 @@ style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-c
 ```
 
 # ✅【验证测试】所有步骤均已完成
-### 1.用 logger 伪造 SSH 失败日志，比如 30 次：
+
+### 1. 用 logger 伪造 SSH 失败日志，比如 30 次：
+
 ```sh
 for i in $(seq 1 30); do \
   logger -t sshd "Failed password for root from 37.252.240.79 port $((40000+i)) ssh2"; \
 done
 ```
+
 <img width="765" height="579" alt="image" src="https://github.com/user-attachments/assets/33bf430c-ebf8-4b7b-a95d-172048eeecb9" />
-静静等待1分钟，等待下一周期脚本自动运行检测后，会对日志中异常IP提取并封禁，在完成封禁后会清理一次系统日志，防止重复封禁。
+
+静静等待 1 分钟，等待下一周期脚本自动运行检测后，会对日志中异常 IP 提取并封禁，在完成封禁后会清理一次系统日志，防止重复封禁。
+
 <img width="470" height="250" alt="image" src="https://github.com/user-attachments/assets/7756b19a-31f8-4c9f-b9cc-422559981c2b" />
-### 2.查看当前生效封禁 IP 列表
+
+### 2. 查看当前生效封禁 IP 列表
+
 ```sh
 iptables -t raw -L PREROUTING -n --line-numbers
 ```
-### 3.查看log封禁日志
-```
+
+### 3. 查看 log 封禁日志
+
+```sh
 /mnt/sda1/Caches/ssh_guard.log
 ```
+
 <img width="585" height="507" alt="image" src="https://github.com/user-attachments/assets/080b3b66-d18d-49f7-95ac-27b7b67f3702" />
 
-### 4.访问WEB前端封禁界面
+### 4. 访问 WEB 前端封禁界面
+
 <img width="2231" height="398" alt="image" src="https://github.com/user-attachments/assets/04e0b37b-2a7f-4f68-a6b8-88d69a555533" />
 
 
