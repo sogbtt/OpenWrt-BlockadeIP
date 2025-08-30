@@ -78,6 +78,22 @@ LOG_FILE="/mnt/sda1/Caches/ssh_guard.log"
 <img width="1168" height="578" alt="image" src="https://github.com/user-attachments/assets/396c9a25-b1b1-4c0d-a081-eea0452fa061" />
 
 🔒 高级功能：【SSH 安全卫士-WEB前端部分】
+请将index.html文件放在同上 LOG_FILE="/mnt/sda1/Caches/ssh_guard.log" 目录下
+前端文件将自动读取log内容并在前端呈现，下面将引导使用docker部署nginx简易前端服务器
 
+<img width="440" height="76" alt="image" src="https://github.com/user-attachments/assets/61d27d4d-f0da-449f-bc08-53b98a9e3c13" />
+1、拉取并运行 Nginx 容器
+将 /mnt/sda1/Caches 挂载到容器内的 /usr/share/nginx/html，
+并将宿主机 17480 端口映射到容器的 80 端口：
+docker run -d \
+  --name banip-web \
+  -p 17480:80 \
+  -v /mnt/sda1/Caches:/usr/share/nginx/html:rw \
+  nginx:latest
+
+2. 访问日志面板
+(http://<你的路由器IP>:17480/)
+
+3、即可查看 /mnt/sda1/Caches 下的封禁日志文件，前端 Web 页面会实时展示最新结果。
 
 
