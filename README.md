@@ -203,7 +203,7 @@ style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-c
 用 logger 伪造 SSH 失败日志，比如 30 次：
 ```sh
 for i in $(seq 1 30); do \
-  logger -t sshd "Failed password for root from 180.154.19.103 port $((40000+i)) ssh2"; \
+  logger -t sshd "Failed password for root from 37.252.240.79 port $((40000+i)) ssh2"; \
 done
 ```
 <img width="765" height="579" alt="image" src="https://github.com/user-attachments/assets/33bf430c-ebf8-4b7b-a95d-172048eeecb9" />
