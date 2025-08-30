@@ -203,6 +203,8 @@ style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-c
 用 logger 伪造 SSH 失败日志，比如 30 次：
 ```sh
 for i in $(seq 1 30); do \
-  logger -t dropbear "ssh login attempt for root from 200.222.245.32 port $((30000+i))"; \
+  logger -t sshd "Failed password for root from 180.154.19.103 port $((40000+i)) ssh2"; \
 done
 ```
+<img width="765" height="579" alt="image" src="https://github.com/user-attachments/assets/33bf430c-ebf8-4b7b-a95d-172048eeecb9" />
+静静等待1分钟，等待下一周期脚本自动运行检测后，会对日志中异常IP提取并封禁，在完成封禁后会清理一次系统日志，防止重复封禁。
