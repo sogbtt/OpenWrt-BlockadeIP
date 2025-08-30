@@ -96,4 +96,14 @@ docker run -d \
 
 3、即可查看 /mnt/sda1/Caches 下的封禁日志文件，前端 Web 页面会实时展示最新结果。
 
+🔒 高级功能：【SSH 安全卫士-Luci登录页样式修改】
+Openwrt默认登录界面并没有额外的按钮扩展，可通过修改模板样式文件来实现新增防护按钮，
+Luci登录界面：/usr/lib/lua/luci/view/themes/argon/sysauth.htm
+大概在第154行左右找到submit登录按钮位置，在下方新增代码
+<img width="868" height="281" alt="image" src="https://github.com/user-attachments/assets/84b54560-b8e8-40cd-b218-f2b21514c998" />
+
+ <a href="http://www.orzjuice.top:17480/" target="_blank"
+style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-color:#ff7e00; color:#fff; font-size:16px; text-align:center;         border-radius:8px; text-decoration:none; font-weight:bold;">
+ 🛡️ 爆 破 攻 击 拦 截 L o g s </a>
+
 
