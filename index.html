@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>望而生畏计划 - SSH 防御面板</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0f0f23;
+      color: #fff;
+      font-family: "Segoe UI", sans-serif;
+    }
+    .header {
+      text-align: center;
+      padding: 40px 20px 20px;
+      font-size: 36px;
+      color: #ff4f4f;
+      letter-spacing: 2px;
+    }
+    .counter {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .flip-digit {
+      background: #1f1f38;
+      color: #00ffaa;
+      padding: 10px 20px;
+      margin: 4px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 56px;
+      box-shadow: 0 2px 10px rgba(0,255,255,0.2);
+      animation: flip 0.5s ease-in-out;
+    }
+    @keyframes flip {
+      0% { transform: rotateX(90deg); opacity: 0; }
+      100% { transform: rotateX(0); opacity: 1; }
+    }
+    table {
+      width: 95%;
+      margin: 0 auto 50px;
+      border-collapse: collapse;
+      background-color: #1b1b2e;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+    th {
+      background-color: #292946;
+      color: #00ffff;
+      font-size: 16px;
+    }
+    tr:nth-child(even) {
+      background-color: #222235;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">👁️SSH入侵封禁面板</div>
+  <div class="counter" id="total-counter"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>IP</th>
+        <th>尝试爆破次数</th>
+        <th>封禁时间</th>
+      </tr>
+    </thead>
+    <tbody id="log-table-body">
+      <tr><td colspan="4">加载中...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    function renderCounter(n) {
+      const counterEl = document.getElementById('total-counter');
+      counterEl.innerHTML = `拦截爆破次数 ` + String(n).split('').map(d => `<span class="flip-digit">${d}</span>`).join('') + ` 次`;
+    }
+
+    fetch('ssh_guard.log')
+      .then(res => res.text())
+      .then(txt => {
+        const lines = txt.trim().split('\n');
+        const entries = [];
+        const ipSet = new Set();
+        for (const line of lines) {
+          const match = line.match(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) 封禁 ([0-9.]+)（尝试 (\d+) 次）$/);
+          if (match) {
+            const [, time, ip, count] = match;
+            if (!ipSet.has(ip)) {
+              entries.push({ time, ip, count });
+              ipSet.add(ip);
+            }
+          }
+        }
+        // 按时间倒序排列（最新在最上）
+        entries.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+        const tbody = document.getElementById('log-table-body');
+        tbody.innerHTML = '';
+        entries.forEach((e, idx) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${e.ip}</td>
+            <td>${e.count}</td>
+            <td>${e.time}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        renderCounter(entries.reduce((sum, e) => sum + parseInt(e.count), 0));
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('log-table-body').innerHTML = '<tr><td colspan="4">读取失败</td></tr>';
+      });
+  </script>
+</body>
+</html>
