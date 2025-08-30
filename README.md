@@ -199,4 +199,10 @@ style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-c
  🛡️ 爆 破 攻 击 拦 截 L o g s </a>
 ```
 
-
+【测试验证】至此所有步骤均已完成
+用 logger 伪造 SSH 失败日志，比如 30 次：
+```sh
+for i in $(seq 1 30); do \
+  logger -t dropbear "ssh login attempt for root from 200.222.245.32 port $((30000+i))"; \
+done
+```
