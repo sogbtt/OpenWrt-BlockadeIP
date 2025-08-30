@@ -199,7 +199,7 @@ style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-c
  🛡️ 爆 破 攻 击 拦 截 L o g s </a>
 ```
 
-# 🔒【验证测试】所有步骤均已完成
+# ✅【验证测试】所有步骤均已完成
 用 logger 伪造 SSH 失败日志，比如 30 次：
 ```sh
 for i in $(seq 1 30); do \
