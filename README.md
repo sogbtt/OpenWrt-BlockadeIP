@@ -61,6 +61,23 @@ BANIP_LIST="/etc/banip.list"   #黑名单存放路径
 5.使用如下命令查看当前生效封禁IP列表
 查看封禁列表是否存在 iptables -t raw -L PREROUTING -n --line-numbers
 
-🚀 部署流程【手动封禁脚本部署】
+🔒 高级功能：【SSH 安全卫士】
+●自动分析 logread 或 LuCI 系统日志
+●识别同一 IP 短时间内多次 SSH 爆破行为（默认阈值：20 次）
+●自动调用 banip.sh 封禁该 IP
+●在 /mnt/sda1/Caches/ 下生成日志文件，仅记录成功封禁的 IP
+
+1、部署防护脚本 将ssh_guard.sh  拷贝至/usr/bin/ssh_guard.sh  
+2、chmod +x /usr/bin/ssh_guard.sh
+3、守护日志路径：/mnt/sda1/Caches/ssh_guard.log
+如需修改日志储存路径，请修改脚本中，其余路径请不要做改动
+LOG_FILE="/mnt/sda1/Caches/ssh_guard.log"
+4、设置计划任务周期性运行IP封禁卫士脚本
+计划任务每分钟执行一次脚本：
+* * * * * /usr/bin/ssh_guard.sh
+<img width="1168" height="578" alt="image" src="https://github.com/user-attachments/assets/396c9a25-b1b1-4c0d-a081-eea0452fa061" />
+
+🔒 高级功能：【SSH 安全卫士-WEB前端部分】
+
 
 
