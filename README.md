@@ -194,7 +194,7 @@ OpenWrt 默认登录界面并没有额外的按钮扩展，可通过修改模板
 <img width="868" height="281" alt="image" src="https://github.com/user-attachments/assets/84b54560-b8e8-40cd-b218-f2b21514c998" />
 
 ```html
-<a href="http://www.orzjuice.top:17480/" target="_blank"
+<a href="http://你的服务器地址:17480/" target="_blank"
 style="display:block; margin-top:-80px; padding:15px 0; width:100%; background-color:#ff7e00; color:#fff; font-size:16px; text-align:center; border-radius:8px; text-decoration:none; font-weight:bold;">
  🛡️ 爆 破 攻 击 拦 截 L o g s </a>
 ```
